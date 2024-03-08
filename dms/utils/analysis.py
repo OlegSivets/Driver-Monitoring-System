@@ -1,8 +1,9 @@
 import numpy as np
-from tqdm import tqdm
 
 
 class Analyzer:
+    """_summary_
+    """
     def __init__(self, min_wrist_dist=110, max_wrist_dist=130, max_wrist_move=10):
         self.min_wrist_dist = min_wrist_dist
         self.max_wrist_dist = max_wrist_dist
@@ -51,6 +52,14 @@ class Analyzer:
         return violations_processed
 
     def process_violations(self, violations):
+        """_summary_
+
+        Args:
+            violations (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
         violations_processed = []
         passed_time = 0
         start_time = -1

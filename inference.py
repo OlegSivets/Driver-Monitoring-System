@@ -1,24 +1,25 @@
-# TEST YOUR MODEL HERE
-from model import *
-from analysis import *
 import argparse
+import pandas as pd
+
+from dms import Engine
+from dms.utils import Analyzer
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-d', '--detection-model', help="Путь к весам модели детекции телефонов",
-                    type=str, default='models/70_7_x_best.pt')
+                    type=str, default='trained_models/yolov8m.pt')
 parser.add_argument('-p', '--pose-model', help="Путь к весам модели детекции поз",
-                    type=str, default='models/yolov8x-pose.pt')
+                    type=str, default='trained_models/yolov8m-pose.pt')
 parser.add_argument('-v', '--video-path', help="Путь к исходному видео",
-                    type=str, default='tests/test_video.mp4')
+                    type=str, default='data/test_video_cut.mp4')
 parser.add_argument('-o', '--out-path', help="Путь для сохранения обработанного видео",
-                    type=str, default='results/test_result.avi')
-parser.add_argument('-c', '--csv-save-path', help="Путь для сохранения результата работы модели",
-                    type=str, default='csv_results/res_data.csv')
+                    type=str, default='results/processed_videos/test_result.avi')
+parser.add_argument('-c', '--csv-save-path', help="Путь для сохранения результата работы модели", 
+                    type=str, default='results/res_data.csv')
 
 args = parser.parse_args()
-csv_save_path = 'path to save result'
 
-model = AttentionModel()
+model = Engine()
 model.load_models(args.detection_model, args.pose_model)
 model.process_video(args.video_path, args.out_path)
 
