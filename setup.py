@@ -1,11 +1,21 @@
-from setuptools import setup
- 
+from setuptools import setup, find_packages
+import os.path as osp
+
+def get_requirements(filename='requirements.txt'):
+    here = osp.dirname(osp.realpath(__file__))
+    with open(osp.join(here, filename), 'r') as f:
+        requires = [line.replace('\n', '') for line in f.readlines()]
+    return requires
+
 setup(
-   name='my_package',
+   name='dms',
    version='1.0',
-   description='A useful module',
-   author='Author Name',
-   author_email='author@gmail.com',
-   packages=['my_package'],  #same as name
-   install_requires=['numpy', 'pandas'], #external packages as dependencies
+   description='''
+               Модуль для обработки видео с помощью различных инструментов с целью выявления нарушений правил безопасности
+               Module for video processing with various tools to detect security violations''',
+   author='Oleg Sivets',
+   author_email='sivets-oleg-d@mail.ru',
+   packages=find_packages(), 
+   install_requires=get_requirements(),
+   keywords=['Deep Learning', 'Computer Vision', 'Driwer Monitoring System'],
 )
