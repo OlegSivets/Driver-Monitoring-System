@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>dms.handler.handler &mdash; Driwer-Monitoring-System  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Driwer-Monitoring-System
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">dms</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Driwer-Monitoring-System</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">dms.handler.handler</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for dms.handler.handler</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">from</span> <span class="nn">ultralytics</span> <span class="kn">import</span> <span class="n">YOLO</span>
+
+
+<div class="viewcode-block" id="VideoHandler"><a class="viewcode-back" href="../../../dms.handler.html#dms.handler.handler.VideoHandler">[docs]</a><span class="k">class</span> <span class="nc">VideoHandler</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Класс для обработки видео. </span>
+<span class="sd">        Применяет ряд моделей к видео и записывает результат обработки</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;_summary_</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            config (_type_): _description_</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">models</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;detection&#39;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s1">&#39;pos_est&#39;</span><span class="p">:</span> <span class="p">[]</span>
+        <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;detection&#39;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s1">&#39;pos_est&#39;</span><span class="p">:</span> <span class="p">[]</span>
+        <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">cuda_status</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_models</span><span class="p">()</span>
+
+<div class="viewcode-block" id="VideoHandler.load_models"><a class="viewcode-back" href="../../../dms.handler.html#dms.handler.handler.VideoHandler.load_models">[docs]</a>    <span class="k">def</span> <span class="nf">load_models</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;_summary_</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">init_models</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">model_conf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;models&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+
+            <span class="k">if</span> <span class="n">model_conf</span><span class="p">[</span><span class="s1">&#39;format&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;YOLO&#39;</span><span class="p">:</span>
+                <span class="n">init_models</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">YOLO</span><span class="p">(</span><span class="n">model_conf</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">]))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># обработка прочих форматов моделей пока не поддерживается</span>
+                <span class="k">pass</span>
+            <span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">init_models</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cuda_status</span><span class="p">:</span>
+                    <span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;cuda&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="n">model_conf</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">model_name</span><span class="p">,</span> <span class="n">model</span><span class="p">))</span></div>
+
+    <span class="c1"># Метод для обработки результата модели детекции формата YOLO</span>
+<div class="viewcode-block" id="VideoHandler.handle_yolo_detection"><a class="viewcode-back" href="../../../dms.handler.html#dms.handler.handler.VideoHandler.handle_yolo_detection">[docs]</a>    <span class="k">def</span> <span class="nf">handle_yolo_detection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="n">conf</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;_summary_</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            model (_type_): _description_</span>
+<span class="sd">            frames (_type_): _description_</span>
+<span class="sd">            conf (_type_): _description_</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            _type_: _description_</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">frames</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">conf</span><span class="o">=</span><span class="n">conf</span><span class="p">)</span>  <span class="c1"># TODO добавить conf в конфиг</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">names</span>
+        <span class="n">detection_data</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">res</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">results</span><span class="p">):</span>
+            <span class="n">detected_objects</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">boxes</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">boxes</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">box</span> <span class="ow">in</span> <span class="n">boxes</span><span class="p">:</span>
+                <span class="n">class_name</span> <span class="o">=</span> <span class="n">names</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">box</span><span class="o">.</span><span class="n">cls</span><span class="p">)]</span>
+                <span class="n">xyxy</span> <span class="o">=</span> <span class="n">box</span><span class="o">.</span><span class="n">xyxy</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">detected_objects</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">class_name</span><span class="p">,</span> <span class="n">xyxy</span><span class="o">.</span><span class="n">tolist</span><span class="p">()))</span>
+            
+            <span class="k">if</span> <span class="n">detected_objects</span><span class="p">:</span>
+                <span class="n">detection_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">detected_objects</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">detection_data</span><span class="o">.</span><span class="n">append</span><span class="p">([])</span>
+        <span class="k">return</span> <span class="n">detection_data</span></div>
+
+    <span class="c1"># Метод для обработки результата модели определения позы формата YOLO</span>
+<div class="viewcode-block" id="VideoHandler.handle_yolo_pos_est"><a class="viewcode-back" href="../../../dms.handler.html#dms.handler.handler.VideoHandler.handle_yolo_pos_est">[docs]</a>    <span class="k">def</span> <span class="nf">handle_yolo_pos_est</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="n">conf</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;_summary_</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            model (_type_): _description_</span>
+<span class="sd">            frames (_type_): _description_</span>
+<span class="sd">            conf (_type_): _description_</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            _type_: _description_</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">frames</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">conf</span><span class="o">=</span><span class="n">conf</span><span class="p">)</span>
+        <span class="n">pos_est_data</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">res</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">results</span><span class="p">):</span>
+            <span class="n">objects_pos</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">keypoints</span><span class="p">:</span>
+                <span class="n">boxes</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">boxes</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+                <span class="n">keypoints</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">keypoints</span><span class="o">.</span><span class="n">xy</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">box</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">boxes</span><span class="p">):</span>
+                    <span class="n">xyxy</span> <span class="o">=</span> <span class="n">box</span><span class="o">.</span><span class="n">xyxy</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">keys</span> <span class="o">=</span> <span class="n">keypoints</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="n">objects_pos</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">i</span><span class="p">,</span> <span class="n">keys</span><span class="p">,</span> <span class="n">xyxy</span><span class="o">.</span><span class="n">tolist</span><span class="p">()])</span>
+
+            <span class="k">if</span> <span class="n">objects_pos</span><span class="p">:</span>
+                <span class="n">pos_est_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">objects_pos</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">pos_est_data</span><span class="o">.</span><span class="n">append</span><span class="p">([])</span>
+        <span class="k">return</span> <span class="n">pos_est_data</span></div>
+
+    <span class="c1"># Метод для обработки набора кадров выбранными моделями и записи результата</span>
+<div class="viewcode-block" id="VideoHandler.process_batch"><a class="viewcode-back" href="../../../dms.handler.html#dms.handler.handler.VideoHandler.process_batch">[docs]</a>    <span class="k">def</span> <span class="nf">process_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="n">timestamps</span><span class="p">,</span> <span class="n">frame_ids</span><span class="p">):</span> <span class="c1"># TODO привести все к одному формату, чтобы код не дублировался</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;_summary_</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            frames (_type_): _description_</span>
+<span class="sd">            timestamps (_type_): _description_</span>
+<span class="sd">            frame_ids (_type_): _description_</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">detection_models</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="s1">&#39;detection&#39;</span><span class="p">]</span>
+        <span class="n">pos_est_models</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="s1">&#39;pos_est&#39;</span><span class="p">]</span>
+        <span class="n">batch_det_data</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">batch_pos_data</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Обработка кадров моделями детекции</span>
+        <span class="k">if</span> <span class="n">detection_models</span><span class="p">:</span>
+            <span class="n">batch_det_data</span> <span class="o">=</span> <span class="p">[[</span><span class="n">frame_ids</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">timestamps</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="p">[]]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">frames</span><span class="p">)]</span>
+            <span class="k">for</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">detection_models</span><span class="p">:</span>
+                <span class="n">det_data</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="c1"># Обработка моделей формата YOLO</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;models&#39;</span><span class="p">][</span><span class="n">model_name</span><span class="p">][</span><span class="s1">&#39;format&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;YOLO&#39;</span><span class="p">:</span>
+                    <span class="n">conf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;models&#39;</span><span class="p">][</span><span class="n">model_name</span><span class="p">][</span><span class="s1">&#39;specific_params&#39;</span><span class="p">][</span><span class="s1">&#39;conf&#39;</span><span class="p">]</span>
+                    <span class="n">det_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_yolo_detection</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="n">conf</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">det_data</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">frames</span><span class="p">):</span>
+                        <span class="n">batch_det_data</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">det_data</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        
+        <span class="c1"># Обработка кадров моделями определения позы</span>
+        <span class="k">if</span> <span class="n">pos_est_models</span><span class="p">:</span>
+            <span class="n">batch_pos_data</span> <span class="o">=</span> <span class="p">[[</span><span class="n">frame_ids</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">timestamps</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="p">[]]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">frames</span><span class="p">)]</span>
+            <span class="k">for</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">pos_est_models</span><span class="p">:</span>
+                <span class="n">pos_est_data</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="c1"># Обработка моделей формата YOLO</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;models&#39;</span><span class="p">][</span><span class="n">model_name</span><span class="p">][</span><span class="s1">&#39;format&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;YOLO&#39;</span><span class="p">:</span>
+                    <span class="n">conf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;models&#39;</span><span class="p">][</span><span class="n">model_name</span><span class="p">][</span><span class="s1">&#39;specific_params&#39;</span><span class="p">][</span><span class="s1">&#39;conf&#39;</span><span class="p">]</span>
+                    <span class="n">pos_est_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_yolo_pos_est</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="n">conf</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">pos_est_data</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">frames</span><span class="p">):</span>
+                        <span class="n">batch_pos_data</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">pos_est_data</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+        <span class="c1"># Запись результатов обработки</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;detection&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">batch_det_data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;pos_est&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">batch_pos_data</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="VideoHandler.process_video"><a class="viewcode-back" href="../../../dms.handler.html#dms.handler.handler.VideoHandler.process_video">[docs]</a>    <span class="k">def</span> <span class="nf">process_video</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">video_path</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;_summary_</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            video_path (_type_): _description_</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            _type_: _description_</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">batch_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;processing&#39;</span><span class="p">][</span><span class="s1">&#39;BATCH_SIZE&#39;</span><span class="p">]</span>
+        
+        <span class="c1"># Информация о видео</span>
+        <span class="n">cap</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoCapture</span><span class="p">(</span><span class="n">video_path</span><span class="p">)</span>
+        <span class="n">frame_count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">cap</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">CAP_PROP_FRAME_COUNT</span><span class="p">))</span>
+
+        <span class="c1"># Цикл обработки видео</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="n">frame_count</span><span class="p">)</span> <span class="k">as</span> <span class="n">pbar</span><span class="p">:</span>
+            <span class="k">while</span> <span class="n">cap</span><span class="o">.</span><span class="n">isOpened</span><span class="p">():</span>
+                <span class="n">frames</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">frame_ids</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">timestamps</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="c1"># Собираем кадры в батч для обработки</span>
+                <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">batch_size</span><span class="p">):</span>
+                    <span class="n">success</span><span class="p">,</span> <span class="n">frame</span> <span class="o">=</span> <span class="n">cap</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+                    <span class="n">frame_id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">cap</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">CAP_PROP_POS_FRAMES</span><span class="p">))</span>
+
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">success</span><span class="p">:</span>
+                        <span class="k">break</span>
+                    <span class="n">timestamps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cap</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">CAP_PROP_POS_MSEC</span><span class="p">))</span>
+                    <span class="n">frame_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">frame_id</span><span class="p">)</span>
+                    <span class="n">frames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="c1"># Отправляем собранный батч на обработку</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">process_batch</span><span class="p">(</span><span class="n">frames</span><span class="p">,</span> <span class="n">timestamps</span><span class="p">,</span> <span class="n">frame_ids</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">success</span><span class="p">:</span>
+                    <span class="k">break</span>
+                <span class="n">pbar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">frames</span><span class="p">))</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Time: </span><span class="si">{</span><span class="n">end</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span></div>
+
+<div class="viewcode-block" id="VideoHandler.get_frame_data"><a class="viewcode-back" href="../../../dms.handler.html#dms.handler.handler.VideoHandler.get_frame_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_frame_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">task</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;_summary_</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            timestamp (_type_): _description_</span>
+<span class="sd">            task (_type_): _description_</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            _type_: _description_</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">obj_data</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">task</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">time</span> <span class="o">&gt;=</span> <span class="n">timestamp</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">obj_data</span></div>
+
+<div class="viewcode-block" id="VideoHandler.clear_data"><a class="viewcode-back" href="../../../dms.handler.html#dms.handler.handler.VideoHandler.clear_data">[docs]</a>    <span class="k">def</span> <span class="nf">clear_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;_summary_</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span></div></div>
+        
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Oleg Sivets.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

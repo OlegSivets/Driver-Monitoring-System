@@ -2,16 +2,39 @@ import numpy as np
 
 
 class Analyzer:
+    """_summary_
+    """
     def __init__(self, config):
+        """_summary_
+
+        Args:
+            config (_type_): _description_
+        """
         self.config = config
         self.violations = []
 
     @staticmethod
     def _get_center(bbox):
+        """_summary_
+
+        Args:
+            bbox (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
         return np.array([(bbox[0] + bbox[2]) / 2, (bbox[1] + bbox[3]) / 2])
     
     @staticmethod
     def convert_time(millis):
+        """_summary_
+
+        Args:
+            millis (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
         millis = int(millis)
         seconds=(millis/1000)%60
         seconds = int(seconds)
@@ -21,6 +44,14 @@ class Analyzer:
 
     @staticmethod
     def _split_violations(phone_usage_frames):
+        """_summary_
+
+        Args:
+            phone_usage_frames (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
         person_violations = {}
         for frame_id, timestamp, person in phone_usage_frames:
             if person not in person_violations.keys():
@@ -29,6 +60,15 @@ class Analyzer:
         return person_violations
     
     def _get_phone_usage_frames(self, det, pos):
+        """_summary_
+
+        Args:
+            det (_type_): _description_
+            pos (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
         phone_usage_frames = []
         max_wrist_dist = self.config['wrist_phone_usage']['max_wrist_dist']
 
@@ -43,6 +83,14 @@ class Analyzer:
         return phone_usage_frames
 
     def wrist_phone_usage(self, unprocessed_data):
+        """_summary_
+
+        Args:
+            unprocessed_data (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
         detection_data, pos_est_data = unprocessed_data
         min_duratuin = self.config['wrist_phone_usage']['min_duration']
         max_short_diff = self.config['wrist_phone_usage']['max_short_diff']
@@ -77,6 +125,15 @@ class Analyzer:
         return violations
     
     def violation_analysis(self, data, methods):
+        """_summary_
+
+        Args:
+            data (_type_): _description_
+            methods (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
         for method in methods:
             func = getattr(self, method)
             unprocessed_data = []
@@ -86,4 +143,6 @@ class Analyzer:
         return self.violations
 
     def clear_data(self):
+        """_summary_
+        """
         self.violations = []

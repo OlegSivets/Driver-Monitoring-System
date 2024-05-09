@@ -11,16 +11,19 @@ class VideoHandler():
     """
 
     def __init__(self, config) -> None:
-        # конфигурация обработчика
+        """_summary_
+
+        Args:
+            config (_type_): _description_
+        """
+
         self.config = config
 
-        # инициализированные модели 
         self.models = {
             'detection': [],
             'pos_est': []
         }
 
-        # Информация полученная после обработки
         self.data = {
             'detection': [],
             'pos_est': []
@@ -28,11 +31,11 @@ class VideoHandler():
 
         self.cuda_status = torch.cuda.is_available()
 
-        # Инициализация моделей обработки
         self.load_models()
 
     def load_models(self):
-        # Инициализация моделей обработки
+        """_summary_
+        """
         init_models = []
         for model_name, model_conf in self.config['models'].items():
 
@@ -47,7 +50,17 @@ class VideoHandler():
                 self.models[model_conf['task']].append((model_name, model))
 
     # Метод для обработки результата модели детекции формата YOLO
-    def handle_yolo_detection(self, model, frames, conf): 
+    def handle_yolo_detection(self, model, frames, conf):
+        """_summary_
+
+        Args:
+            model (_type_): _description_
+            frames (_type_): _description_
+            conf (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
         results = model(frames, verbose=False, conf=conf)  # TODO добавить conf в конфиг
         names = model.names
         detection_data = []
@@ -68,6 +81,16 @@ class VideoHandler():
 
     # Метод для обработки результата модели определения позы формата YOLO
     def handle_yolo_pos_est(self, model, frames, conf):
+        """_summary_
+
+        Args:
+            model (_type_): _description_
+            frames (_type_): _description_
+            conf (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
         results = model(frames, verbose=False, conf=conf)
         pos_est_data = []
 
@@ -89,7 +112,13 @@ class VideoHandler():
 
     # Метод для обработки набора кадров выбранными моделями и записи результата
     def process_batch(self, frames, timestamps, frame_ids): # TODO привести все к одному формату, чтобы код не дублировался
+        """_summary_
 
+        Args:
+            frames (_type_): _description_
+            timestamps (_type_): _description_
+            frame_ids (_type_): _description_
+        """
         detection_models = self.models['detection']
         pos_est_models = self.models['pos_est']
         batch_det_data = []
@@ -128,6 +157,14 @@ class VideoHandler():
 
 
     def process_video(self, video_path):
+        """_summary_
+
+        Args:
+            video_path (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
         batch_size = self.config['processing']['BATCH_SIZE']
         
         # Информация о видео
@@ -165,11 +202,22 @@ class VideoHandler():
         return self.data
 
     def get_frame_data(self, timestamp, task):
+        """_summary_
+
+        Args:
+            timestamp (_type_): _description_
+            task (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
         for _, time, obj_data in self.data[task]:
             if time >= timestamp:
                 return obj_data
 
     def clear_data(self):
+        """_summary_
+        """
         for key in self.data.keys():
             self.data[key] = []
         

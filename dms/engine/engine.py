@@ -10,13 +10,13 @@ class Engine:
 
     """
     def __init__(self, config = config):  # grayscale_adapted=False
-        """
+        """""
         Инициализация объекта класса
         Args:
             config (dict): конфигурация запуска системы содержит информацию
             о моделях, методах поиска нарушений и параметрах обработки видео.
             Defaults to config['handlers'].
-        """
+        """""
 
         self.config = config
         self.handler = VideoHandler(self.config['handler'])
@@ -24,6 +24,15 @@ class Engine:
         self.renderer = VideoRenderer()
 
     def violations_search(self, video_path, methods=None):
+        """_summary_
+
+        Args:
+            video_path (_type_): _description_
+            methods (_type_, optional): _description_. Defaults to None.
+
+        Returns:
+            _type_: _description_
+        """
         self.handler.clear_data()
         self.analizer.clear_data()
 
@@ -36,6 +45,15 @@ class Engine:
         return violations
     
     def show_violations(self, timestamp, video_path):
+        """_summary_
+
+        Args:
+            timestamp (_type_): _description_
+            video_path (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
         frame = self.renderer.get_frame(timestamp, video_path)
         
         frame_detections_data = self.handler.get_frame_data(timestamp, 'detection')

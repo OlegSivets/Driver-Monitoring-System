@@ -6,7 +6,11 @@ from dms.engine import Engine
 
 
 class Interface():
+    """_summary_
+    """
     def __init__(self, ) -> None:
+        """_summary_
+        """
         self.engine = Engine()
 
         self.inputs  = [
@@ -34,6 +38,15 @@ class Interface():
         self.pd_data = None
 
     def logic(self, video_path, image_time):
+        """_summary_
+
+        Args:
+            video_path (_type_): _description_
+            image_time (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
         image = None
 
         if video_path and self.last_video != video_path:
@@ -50,6 +63,8 @@ class Interface():
 
 
     def launch(self):
+        """_summary_
+        """
         self.demo.launch()
 
 if __name__ == '__main__':

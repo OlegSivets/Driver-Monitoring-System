@@ -3,7 +3,7 @@ import cv2
 
 class VideoRenderer():
     def __init__(self) -> None:
-        pass
+        self.config = None 
 
     @staticmethod
     def plot_boxes(frame, data, type = 'detection'):  # plot detected class box
