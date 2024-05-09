@@ -2,11 +2,20 @@ import cv2
 
 
 class VideoRenderer():
+    """_summary_
+    """
     def __init__(self) -> None:
+        """_summary_
+        """
         self.config = None 
 
     @staticmethod
     def plot_boxes(frame, data, type = 'detection'):  # plot detected class box
+        """_summary_
+
+        Returns:
+            _type_: _description_
+        """
         for obj in data:
             if type == 'detection':
                 label, xyxy = obj
@@ -26,6 +35,13 @@ class VideoRenderer():
 
     @staticmethod
     def save_handled_frame(frame_id, saved_video_path, img_save_path):
+        """_summary_
+
+        Args:
+            frame_id (_type_): _description_
+            saved_video_path (_type_): _description_
+            img_save_path (_type_): _description_
+        """
         cap = cv2.VideoCapture(saved_video_path)
         count = 1
         _, frame = cap.read()
@@ -39,6 +55,15 @@ class VideoRenderer():
 
     @staticmethod
     def get_frame(timestamp, saved_video_path):
+        """_summary_
+
+        Args:
+            timestamp (_type_): _description_
+            saved_video_path (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
         cap = cv2.VideoCapture(saved_video_path)
         _, frame = cap.read()
         while cap.get(cv2.CAP_PROP_POS_MSEC) < timestamp:
