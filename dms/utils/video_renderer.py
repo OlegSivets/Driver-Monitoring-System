@@ -2,24 +2,29 @@ import cv2
 
 
 class VideoRenderer():
-    """_summary_
-    """
     def __init__(self) -> None:
         pass
 
-    def plot_boxes(frame, xyxy, label):  # plot detected class box
-        x1 = int(xyxy[0])
-        y1 = int(xyxy[1])
-        x2 = int(xyxy[2])
-        y2 = int(xyxy[3])
+    @staticmethod
+    def plot_boxes(frame, data, type = 'detection'):  # plot detected class box
+        for obj in data:
+            if type == 'detection':
+                label, xyxy = obj
+            elif type == 'pos_est':
+                label, _, xyxy = obj
 
-        (w, h), _ = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.6, 2)
-        frame = cv2.rectangle(frame, (x1, y1 - 20), (x1 + w, y1), (0, 0, 255), -1)
-        frame = cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 1)
-        frame = cv2.putText(frame, label, (x1, y1 - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+            x1 = int(xyxy[0])
+            y1 = int(xyxy[1])
+            x2 = int(xyxy[2])
+            y2 = int(xyxy[3])
+
+            (w, _), _ = cv2.getTextSize(str(label), cv2.FONT_HERSHEY_SIMPLEX, 0.6, 2)
+            frame = cv2.rectangle(frame, (x1, y1 - 20), (x1 + w, y1), (0, 0, 255), -1)
+            frame = cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+            frame = cv2.putText(frame, str(label), (x1, y1 - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
         return frame
 
-
+    @staticmethod
     def save_handled_frame(frame_id, saved_video_path, img_save_path):
         cap = cv2.VideoCapture(saved_video_path)
         count = 1
@@ -32,8 +37,8 @@ class VideoRenderer():
         cv2.imwrite(f'{img_save_path}/detection_frame_{frame_id}.jpg', frame)
         print('image was saved')
 
-
-    def save_handled_timestamp(timestamp, saved_video_path):
+    @staticmethod
+    def get_frame(timestamp, saved_video_path):
         cap = cv2.VideoCapture(saved_video_path)
         _, frame = cap.read()
         while cap.get(cv2.CAP_PROP_POS_MSEC) < timestamp:
