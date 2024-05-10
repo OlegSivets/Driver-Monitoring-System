@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>dms.interface package &mdash; Driwer-Monitoring-System  documentation</title>
+  <title>dms.interface package &mdash; Driver Monitoring System  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
 
@@ -34,7 +34,7 @@
           
           
           <a href="index.html" class="icon icon-home">
-            Driwer-Monitoring-System
+            Driver Monitoring System
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -71,7 +71,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">Driwer-Monitoring-System</a>
+          <a href="index.html">Driver Monitoring System</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -102,22 +102,22 @@
 <dt class="sig sig-object py" id="dms.interface.interface.Interface">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dms.interface.interface.</span></span><span class="sig-name descname"><span class="pre">Interface</span></span><a class="reference internal" href="_modules/dms/interface/interface.html#Interface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dms.interface.interface.Interface" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>_summary_</p>
+<p>Класс демонстрационного интерфейса системы</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="dms.interface.interface.Interface.launch">
 <span class="sig-name descname"><span class="pre">launch</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dms/interface/interface.html#Interface.launch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dms.interface.interface.Interface.launch" title="Permalink to this definition"></a></dt>
-<dd><p>_summary_</p>
+<dd><p>запуск интерфейса</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dms.interface.interface.Interface.logic">
 <span class="sig-name descname"><span class="pre">logic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">video_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image_time</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dms/interface/interface.html#Interface.logic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dms.interface.interface.Interface.logic" title="Permalink to this definition"></a></dt>
-<dd><p>_summary_</p>
+<dd><p>метод, отвечающий за функционал всех компонентов интерфейса</p>
 <dl class="simple">
-<dt>Args:</dt><dd><p>video_path (_type_): _description_
-image_time (_type_): _description_</p>
+<dt>Args:</dt><dd><p>video_path (str): путь к видео
+image_time (str): временная метка</p>
 </dd>
-<dt>Returns:</dt><dd><p>_type_: _description_</p>
+<dt>Returns:</dt><dd><p>(nd.array, pd.Dataframe): обработанный кадр, информация о нарушениях</p>
 </dd>
 </dl>
 </dd></dl>

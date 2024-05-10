@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>dms.analysis.analysis &mdash; Driwer-Monitoring-System  documentation</title>
+  <title>dms.analysis.analysis &mdash; Driver Monitoring System  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
 
@@ -31,7 +31,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Driwer-Monitoring-System
+            Driver Monitoring System
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -52,7 +52,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Driwer-Monitoring-System</a>
+          <a href="../../../index.html">Driver Monitoring System</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -75,38 +75,39 @@
 
 
 <div class="viewcode-block" id="Analyzer"><a class="viewcode-back" href="../../../dms.analysis.html#dms.analysis.analysis.Analyzer">[docs]</a><span class="k">class</span> <span class="nc">Analyzer</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;_summary_</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Класс Analyzer сожержит все доступные методы анализа нарушений системы.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;_summary_</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Инициализация объекта класса</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            config (_type_): _description_</span>
+<span class="sd">            config (dict): чать конфигурационного файла системы, содержащая информацию</span>
+<span class="sd">            об испольщуемых методах анализа нарушений</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">violations</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">violations</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># список зафиксированных нарушений</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_center</span><span class="p">(</span><span class="n">bbox</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;_summary_</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;вспомогательный метод для получения координат центра найденной области.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            bbox (_type_): _description_</span>
-
+<span class="sd">            bbox (np.array): область, полученная моделью детекции</span>
 <span class="sd">        Returns:</span>
-<span class="sd">            _type_: _description_</span>
+<span class="sd">            np.array: центр области </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="n">bbox</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">bbox</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="n">bbox</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">bbox</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">])</span>
     
 <div class="viewcode-block" id="Analyzer.convert_time"><a class="viewcode-back" href="../../../dms.analysis.html#dms.analysis.analysis.Analyzer.convert_time">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">convert_time</span><span class="p">(</span><span class="n">millis</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;_summary_</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;метод для перевода временных меток к формату минуты:секунды</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            millis (_type_): _description_</span>
+<span class="sd">            millis (float): временная метка</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            _type_: _description_</span>
+<span class="sd">            str: временная метка в новом формате</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">millis</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">millis</span><span class="p">)</span>
         <span class="n">seconds</span><span class="o">=</span><span class="p">(</span><span class="n">millis</span><span class="o">/</span><span class="mi">1000</span><span class="p">)</span><span class="o">%</span><span class="mi">60</span>
@@ -117,13 +118,14 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_split_violations</span><span class="p">(</span><span class="n">phone_usage_frames</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;_summary_</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;создает словарь, содержащий информацию о нарушениях </span>
+<span class="sd">           по каждому человеку в кадре</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            phone_usage_frames (_type_): _description_</span>
+<span class="sd">            phone_usage_frames (list): список кадров на которых были зафиксированы нарушения</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            _type_: _description_</span>
+<span class="sd">            dict: словарь с нарушениями </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">person_violations</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">frame_id</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">person</span> <span class="ow">in</span> <span class="n">phone_usage_frames</span><span class="p">:</span>
@@ -133,14 +135,14 @@
         <span class="k">return</span> <span class="n">person_violations</span>
     
     <span class="k">def</span> <span class="nf">_get_phone_usage_frames</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">det</span><span class="p">,</span> <span class="n">pos</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;_summary_</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; метод для нахождения всех кадров где был использован телефон.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            det (_type_): _description_</span>
-<span class="sd">            pos (_type_): _description_</span>
+<span class="sd">            det (list): данные, полученные с помощью моделей детекции</span>
+<span class="sd">            pos (list): данные, полученные с помощью моделей определения позы</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            _type_: _description_</span>
+<span class="sd">            list: список кадров на которых были зафиксированы нарушения</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">phone_usage_frames</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">max_wrist_dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;wrist_phone_usage&#39;</span><span class="p">][</span><span class="s1">&#39;max_wrist_dist&#39;</span><span class="p">]</span>
@@ -156,13 +158,14 @@
         <span class="k">return</span> <span class="n">phone_usage_frames</span>
 
 <div class="viewcode-block" id="Analyzer.wrist_phone_usage"><a class="viewcode-back" href="../../../dms.analysis.html#dms.analysis.analysis.Analyzer.wrist_phone_usage">[docs]</a>    <span class="k">def</span> <span class="nf">wrist_phone_usage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unprocessed_data</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;_summary_</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;С помощью данных, полученных из испольщуемых моделей обработки</span>
+<span class="sd">           фиксирует временные промежутки, где использовался телефон. </span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            unprocessed_data (_type_): _description_</span>
+<span class="sd">            unprocessed_data (list): данные полученные из обработчика</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            _type_: _description_</span>
+<span class="sd">            list: список нарушений</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">detection_data</span><span class="p">,</span> <span class="n">pos_est_data</span> <span class="o">=</span> <span class="n">unprocessed_data</span>
         <span class="n">min_duratuin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;wrist_phone_usage&#39;</span><span class="p">][</span><span class="s1">&#39;min_duration&#39;</span><span class="p">]</span>
@@ -198,14 +201,14 @@
         <span class="k">return</span> <span class="n">violations</span></div>
     
 <div class="viewcode-block" id="Analyzer.violation_analysis"><a class="viewcode-back" href="../../../dms.analysis.html#dms.analysis.analysis.Analyzer.violation_analysis">[docs]</a>    <span class="k">def</span> <span class="nf">violation_analysis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">methods</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;_summary_</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;метод для запуска анализаторов</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            data (_type_): _description_</span>
-<span class="sd">            methods (_type_): _description_</span>
+<span class="sd">            data (dict): данные полученные из обработчика</span>
+<span class="sd">            methods (list): список выбранных методов анализа</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            _type_: _description_</span>
+<span class="sd">            list: список нарушений</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">methods</span><span class="p">:</span>
             <span class="n">func</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
@@ -216,8 +219,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">violations</span></div>
 
 <div class="viewcode-block" id="Analyzer.clear_data"><a class="viewcode-back" href="../../../dms.analysis.html#dms.analysis.analysis.Analyzer.clear_data">[docs]</a>    <span class="k">def</span> <span class="nf">clear_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;_summary_</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;удаление информации о найденных нарушениях&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">violations</span> <span class="o">=</span> <span class="p">[]</span></div></div>
 </pre></div>
 

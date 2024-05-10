@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>dms.utils.video_renderer &mdash; Driwer-Monitoring-System  documentation</title>
+  <title>dms.utils.video_renderer &mdash; Driver Monitoring System  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
 
@@ -31,7 +31,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Driwer-Monitoring-System
+            Driver Monitoring System
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -52,7 +52,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Driwer-Monitoring-System</a>
+          <a href="../../../index.html">Driver Monitoring System</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -75,19 +75,17 @@
 
 
 <div class="viewcode-block" id="VideoRenderer"><a class="viewcode-back" href="../../../dms.utils.html#dms.utils.video_renderer.VideoRenderer">[docs]</a><span class="k">class</span> <span class="nc">VideoRenderer</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;_summary_</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Класс, содержащий вспомогательные методы для работы с изоражениями и видео&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;_summary_</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Инициализация объекта класса&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="kc">None</span> 
 
 <div class="viewcode-block" id="VideoRenderer.plot_boxes"><a class="viewcode-back" href="../../../dms.utils.html#dms.utils.video_renderer.VideoRenderer.plot_boxes">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">plot_boxes</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="nb">type</span> <span class="o">=</span> <span class="s1">&#39;detection&#39;</span><span class="p">):</span>  <span class="c1"># plot detected class box</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;_summary_</span>
+    <span class="k">def</span> <span class="nf">plot_boxes</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="nb">type</span> <span class="o">=</span> <span class="s1">&#39;detection&#39;</span><span class="p">):</span> 
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;метод для отрисовки областей интереса, полученных с помощью детекции</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            _type_: _description_</span>
+<span class="sd">            nd.array: кадр с отрисованной областью</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">type</span> <span class="o">==</span> <span class="s1">&#39;detection&#39;</span><span class="p">:</span>
@@ -108,12 +106,12 @@
 
 <div class="viewcode-block" id="VideoRenderer.save_handled_frame"><a class="viewcode-back" href="../../../dms.utils.html#dms.utils.video_renderer.VideoRenderer.save_handled_frame">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">save_handled_frame</span><span class="p">(</span><span class="n">frame_id</span><span class="p">,</span> <span class="n">saved_video_path</span><span class="p">,</span> <span class="n">img_save_path</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;_summary_</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;метод для сохранения кадра из видео</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            frame_id (_type_): _description_</span>
-<span class="sd">            saved_video_path (_type_): _description_</span>
-<span class="sd">            img_save_path (_type_): _description_</span>
+<span class="sd">            frame_id (_type_): id кадра </span>
+<span class="sd">            saved_video_path (_type_): пусть к видео</span>
+<span class="sd">            img_save_path (_type_): путь сохранения кадра </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">cap</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoCapture</span><span class="p">(</span><span class="n">saved_video_path</span><span class="p">)</span>
         <span class="n">count</span> <span class="o">=</span> <span class="mi">1</span>
@@ -128,14 +126,14 @@
 
 <div class="viewcode-block" id="VideoRenderer.get_frame"><a class="viewcode-back" href="../../../dms.utils.html#dms.utils.video_renderer.VideoRenderer.get_frame">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_frame</span><span class="p">(</span><span class="n">timestamp</span><span class="p">,</span> <span class="n">saved_video_path</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;_summary_</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;поиск кадра по временной метке</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            timestamp (_type_): _description_</span>
-<span class="sd">            saved_video_path (_type_): _description_</span>
+<span class="sd">            timestamp (_type_): временная метка кадра</span>
+<span class="sd">            saved_video_path (_type_): путь к видео</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            _type_: _description_</span>
+<span class="sd">            np.array: искомый кадр</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">cap</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoCapture</span><span class="p">(</span><span class="n">saved_video_path</span><span class="p">)</span>
         <span class="n">_</span><span class="p">,</span> <span class="n">frame</span> <span class="o">=</span> <span class="n">cap</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>

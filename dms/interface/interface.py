@@ -6,11 +6,10 @@ from dms.engine import Engine
 
 
 class Interface():
-    """_summary_
+    """Класс демонстрационного интерфейса системы
     """
-    def __init__(self, ) -> None:
-        """_summary_
-        """
+    def __init__(self) -> None:
+        """Инициализация объекта класса"""
         self.engine = Engine()
 
         self.inputs  = [
@@ -38,14 +37,14 @@ class Interface():
         self.pd_data = None
 
     def logic(self, video_path, image_time):
-        """_summary_
+        """метод, отвечающий за функционал всех компонентов интерфейса
 
         Args:
-            video_path (_type_): _description_
-            image_time (_type_): _description_
+            video_path (str): путь к видео
+            image_time (str): временная метка
 
         Returns:
-            _type_: _description_
+            (nd.array, pd.Dataframe): обработанный кадр, информация о нарушениях
         """
         image = None
 
@@ -63,8 +62,7 @@ class Interface():
 
 
     def launch(self):
-        """_summary_
-        """
+        """запуск интерфейса"""
         self.demo.launch()
 
 if __name__ == '__main__':

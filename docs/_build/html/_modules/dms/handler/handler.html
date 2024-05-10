@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>dms.handler.handler &mdash; Driwer-Monitoring-System  documentation</title>
+  <title>dms.handler.handler &mdash; Driver Monitoring System  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
 
@@ -31,7 +31,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Driwer-Monitoring-System
+            Driver Monitoring System
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -52,7 +52,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Driwer-Monitoring-System</a>
+          <a href="../../../index.html">Driver Monitoring System</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -84,10 +84,11 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;_summary_</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Инициализация объекта класса</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            config (_type_): _description_</span>
+<span class="sd">            config (_type_): чать конфигурационного файла системы, содержащая информацию</span>
+<span class="sd">            об используемых моделях и параметрах обработки видео</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
@@ -103,36 +104,30 @@
         <span class="p">}</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">cuda_status</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">load_models</span><span class="p">()</span>
 
 <div class="viewcode-block" id="VideoHandler.load_models"><a class="viewcode-back" href="../../../dms.handler.html#dms.handler.handler.VideoHandler.load_models">[docs]</a>    <span class="k">def</span> <span class="nf">load_models</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;_summary_</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;метод для инициализации моделей обработки</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">init_models</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">model_conf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;models&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-
             <span class="k">if</span> <span class="n">model_conf</span><span class="p">[</span><span class="s1">&#39;format&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;YOLO&#39;</span><span class="p">:</span>
                 <span class="n">init_models</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">YOLO</span><span class="p">(</span><span class="n">model_conf</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">]))</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="c1"># обработка прочих форматов моделей пока не поддерживается</span>
-                <span class="k">pass</span>
             <span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">init_models</span><span class="p">:</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cuda_status</span><span class="p">:</span>
                     <span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;cuda&#39;</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="n">model_conf</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">model_name</span><span class="p">,</span> <span class="n">model</span><span class="p">))</span></div>
 
-    <span class="c1"># Метод для обработки результата модели детекции формата YOLO</span>
 <div class="viewcode-block" id="VideoHandler.handle_yolo_detection"><a class="viewcode-back" href="../../../dms.handler.html#dms.handler.handler.VideoHandler.handle_yolo_detection">[docs]</a>    <span class="k">def</span> <span class="nf">handle_yolo_detection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="n">conf</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;_summary_</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;метод для обработки результата модели детекции формата YOLO</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            model (_type_): _description_</span>
-<span class="sd">            frames (_type_): _description_</span>
-<span class="sd">            conf (_type_): _description_</span>
+<span class="sd">            model (_type_): модель детекции</span>
+<span class="sd">            frames (np.array): кадры для обработки</span>
+<span class="sd">            conf (float): параметр уверенности модели</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            _type_: _description_</span>
+<span class="sd">            list: результат обработки</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">results</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">frames</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">conf</span><span class="o">=</span><span class="n">conf</span><span class="p">)</span>  <span class="c1"># TODO добавить conf в конфиг</span>
         <span class="n">names</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">names</span>
@@ -152,17 +147,16 @@
                 <span class="n">detection_data</span><span class="o">.</span><span class="n">append</span><span class="p">([])</span>
         <span class="k">return</span> <span class="n">detection_data</span></div>
 
-    <span class="c1"># Метод для обработки результата модели определения позы формата YOLO</span>
 <div class="viewcode-block" id="VideoHandler.handle_yolo_pos_est"><a class="viewcode-back" href="../../../dms.handler.html#dms.handler.handler.VideoHandler.handle_yolo_pos_est">[docs]</a>    <span class="k">def</span> <span class="nf">handle_yolo_pos_est</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="n">conf</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;_summary_</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;етод для обработки результата модели определения позы формата YOLO</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            model (_type_): _description_</span>
-<span class="sd">            frames (_type_): _description_</span>
-<span class="sd">            conf (_type_): _description_</span>
+<span class="sd">            model (_type_): модель определения позы</span>
+<span class="sd">            frames (np.array): кадры для обработки </span>
+<span class="sd">            conf (float): параметр уверенности модели</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            _type_: _description_</span>
+<span class="sd">            list: результат обработки</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">results</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">frames</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">conf</span><span class="o">=</span><span class="n">conf</span><span class="p">)</span>
         <span class="n">pos_est_data</span> <span class="o">=</span> <span class="p">[]</span>
@@ -184,13 +178,13 @@
         <span class="k">return</span> <span class="n">pos_est_data</span></div>
 
     <span class="c1"># Метод для обработки набора кадров выбранными моделями и записи результата</span>
-<div class="viewcode-block" id="VideoHandler.process_batch"><a class="viewcode-back" href="../../../dms.handler.html#dms.handler.handler.VideoHandler.process_batch">[docs]</a>    <span class="k">def</span> <span class="nf">process_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="n">timestamps</span><span class="p">,</span> <span class="n">frame_ids</span><span class="p">):</span> <span class="c1"># TODO привести все к одному формату, чтобы код не дублировался</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;_summary_</span>
+<div class="viewcode-block" id="VideoHandler.process_batch"><a class="viewcode-back" href="../../../dms.handler.html#dms.handler.handler.VideoHandler.process_batch">[docs]</a>    <span class="k">def</span> <span class="nf">process_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="n">timestamps</span><span class="p">,</span> <span class="n">frame_ids</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;метод для обработки набора кадров с помощью выбранных моделей и записи полученой информации </span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            frames (_type_): _description_</span>
-<span class="sd">            timestamps (_type_): _description_</span>
-<span class="sd">            frame_ids (_type_): _description_</span>
+<span class="sd">            frames (mp.array): кадры для обработки </span>
+<span class="sd">            timestamps (list): список с временными метками кадров </span>
+<span class="sd">            frame_ids (list): список с id кадров </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">detection_models</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="s1">&#39;detection&#39;</span><span class="p">]</span>
         <span class="n">pos_est_models</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="s1">&#39;pos_est&#39;</span><span class="p">]</span>
@@ -230,13 +224,13 @@
 
 
 <div class="viewcode-block" id="VideoHandler.process_video"><a class="viewcode-back" href="../../../dms.handler.html#dms.handler.handler.VideoHandler.process_video">[docs]</a>    <span class="k">def</span> <span class="nf">process_video</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">video_path</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;_summary_</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;метод обработки видео</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            video_path (_type_): _description_</span>
+<span class="sd">            video_path (str): путьк видео</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            _type_: _description_</span>
+<span class="sd">            dict: результат обработки видео выбранными моделями</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">batch_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;processing&#39;</span><span class="p">][</span><span class="s1">&#39;BATCH_SIZE&#39;</span><span class="p">]</span>
         
@@ -275,11 +269,11 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span></div>
 
 <div class="viewcode-block" id="VideoHandler.get_frame_data"><a class="viewcode-back" href="../../../dms.handler.html#dms.handler.handler.VideoHandler.get_frame_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_frame_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">task</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;_summary_</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;метд для полученния информации по обработанному кадру</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            timestamp (_type_): _description_</span>
-<span class="sd">            task (_type_): _description_</span>
+<span class="sd">            timestamp (float): временная метка кадра</span>
+<span class="sd">            task (str): тип обработки</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            _type_: _description_</span>
@@ -289,8 +283,7 @@
                 <span class="k">return</span> <span class="n">obj_data</span></div>
 
 <div class="viewcode-block" id="VideoHandler.clear_data"><a class="viewcode-back" href="../../../dms.handler.html#dms.handler.handler.VideoHandler.clear_data">[docs]</a>    <span class="k">def</span> <span class="nf">clear_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;_summary_</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;удаление информации об обработанных кадрах&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span></div></div>
         

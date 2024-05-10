@@ -2,38 +2,39 @@ import numpy as np
 
 
 class Analyzer:
-    """_summary_
+    """ Класс Analyzer сожержит все доступные методы анализа нарушений системы.
     """
     def __init__(self, config):
-        """_summary_
+        """ Инициализация объекта класса
 
         Args:
-            config (_type_): _description_
+            config (dict): чать конфигурационного файла системы, содержащая информацию
+            об испольщуемых методах анализа нарушений
         """
+
         self.config = config
-        self.violations = []
+        self.violations = []  # список зафиксированных нарушений
 
     @staticmethod
     def _get_center(bbox):
-        """_summary_
+        """вспомогательный метод для получения координат центра найденной области.
 
         Args:
-            bbox (_type_): _description_
-
+            bbox (np.array): область, полученная моделью детекции
         Returns:
-            _type_: _description_
+            np.array: центр области 
         """
         return np.array([(bbox[0] + bbox[2]) / 2, (bbox[1] + bbox[3]) / 2])
     
     @staticmethod
     def convert_time(millis):
-        """_summary_
+        """метод для перевода временных меток к формату минуты:секунды
 
         Args:
-            millis (_type_): _description_
+            millis (float): временная метка
 
         Returns:
-            _type_: _description_
+            str: временная метка в новом формате
         """
         millis = int(millis)
         seconds=(millis/1000)%60
@@ -44,13 +45,14 @@ class Analyzer:
 
     @staticmethod
     def _split_violations(phone_usage_frames):
-        """_summary_
+        """создает словарь, содержащий информацию о нарушениях 
+           по каждому человеку в кадре
 
         Args:
-            phone_usage_frames (_type_): _description_
+            phone_usage_frames (list): список кадров на которых были зафиксированы нарушения
 
         Returns:
-            _type_: _description_
+            dict: словарь с нарушениями 
         """
         person_violations = {}
         for frame_id, timestamp, person in phone_usage_frames:
@@ -60,14 +62,14 @@ class Analyzer:
         return person_violations
     
     def _get_phone_usage_frames(self, det, pos):
-        """_summary_
+        """ метод для нахождения всех кадров где был использован телефон.
 
         Args:
-            det (_type_): _description_
-            pos (_type_): _description_
+            det (list): данные, полученные с помощью моделей детекции
+            pos (list): данные, полученные с помощью моделей определения позы
 
         Returns:
-            _type_: _description_
+            list: список кадров на которых были зафиксированы нарушения
         """
         phone_usage_frames = []
         max_wrist_dist = self.config['wrist_phone_usage']['max_wrist_dist']
@@ -83,13 +85,14 @@ class Analyzer:
         return phone_usage_frames
 
     def wrist_phone_usage(self, unprocessed_data):
-        """_summary_
+        """С помощью данных, полученных из испольщуемых моделей обработки
+           фиксирует временные промежутки, где использовался телефон. 
 
         Args:
-            unprocessed_data (_type_): _description_
+            unprocessed_data (list): данные полученные из обработчика
 
         Returns:
-            _type_: _description_
+            list: список нарушений
         """
         detection_data, pos_est_data = unprocessed_data
         min_duratuin = self.config['wrist_phone_usage']['min_duration']
@@ -125,14 +128,14 @@ class Analyzer:
         return violations
     
     def violation_analysis(self, data, methods):
-        """_summary_
+        """метод для запуска анализаторов
 
         Args:
-            data (_type_): _description_
-            methods (_type_): _description_
+            data (dict): данные полученные из обработчика
+            methods (list): список выбранных методов анализа
 
         Returns:
-            _type_: _description_
+            list: список нарушений
         """
         for method in methods:
             func = getattr(self, method)
@@ -143,6 +146,5 @@ class Analyzer:
         return self.violations
 
     def clear_data(self):
-        """_summary_
-        """
+        """удаление информации о найденных нарушениях"""
         self.violations = []

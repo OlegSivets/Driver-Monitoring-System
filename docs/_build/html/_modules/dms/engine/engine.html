@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>dms.engine.engine &mdash; Driwer-Monitoring-System  documentation</title>
+  <title>dms.engine.engine &mdash; Driver Monitoring System  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
 
@@ -31,7 +31,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Driwer-Monitoring-System
+            Driver Monitoring System
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -52,7 +52,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Driwer-Monitoring-System</a>
+          <a href="../../../index.html">Driver Monitoring System</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -78,17 +78,16 @@
 
 <div class="viewcode-block" id="Engine"><a class="viewcode-back" href="../../../dms.engine.html#dms.engine.engine.Engine">[docs]</a><span class="k">class</span> <span class="nc">Engine</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Класс Engine является связующим звеном между обработчиком, анализаторм и </span>
-<span class="sd">    модулем для работы с базой данных.</span>
+<span class="sd">    Класс Engine является связующим звеном между обработчиком и анализаторм.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span> <span class="o">=</span> <span class="n">config</span><span class="p">):</span>  <span class="c1"># grayscale_adapted=False</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span> <span class="o">=</span> <span class="n">config</span><span class="p">):</span> 
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;&quot;&quot;</span>
 <span class="sd">        Инициализация объекта класса</span>
 <span class="sd">        Args:</span>
 <span class="sd">            config (dict): конфигурация запуска системы содержит информацию</span>
 <span class="sd">            о моделях, методах поиска нарушений и параметрах обработки видео.</span>
-<span class="sd">            Defaults to config[&#39;handlers&#39;].</span>
+<span class="sd">            Defaults to config.</span>
 <span class="sd">        &quot;&quot;&quot;</span><span class="s2">&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
@@ -97,14 +96,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span> <span class="o">=</span> <span class="n">VideoRenderer</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Engine.violations_search"><a class="viewcode-back" href="../../../dms.engine.html#dms.engine.engine.Engine.violations_search">[docs]</a>    <span class="k">def</span> <span class="nf">violations_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">video_path</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;_summary_</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;метод для поиска нарушений на видео. </span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            video_path (_type_): _description_</span>
-<span class="sd">            methods (_type_, optional): _description_. Defaults to None.</span>
+<span class="sd">            video_path (str): путь к видео</span>
+<span class="sd">            methods (list, optional): выбраные методы анализа видео, при отсутствии</span>
+<span class="sd">            параметра будут использованы все доступные методы</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            _type_: _description_</span>
+<span class="sd">            list: список нарушений</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="o">.</span><span class="n">clear_data</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">analizer</span><span class="o">.</span><span class="n">clear_data</span><span class="p">()</span>
@@ -118,14 +118,14 @@
         <span class="k">return</span> <span class="n">violations</span></div>
     
 <div class="viewcode-block" id="Engine.show_violations"><a class="viewcode-back" href="../../../dms.engine.html#dms.engine.engine.Engine.show_violations">[docs]</a>    <span class="k">def</span> <span class="nf">show_violations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">video_path</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;_summary_</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;метод для получения кадра со всеми метками использованных моделей обработки</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            timestamp (_type_): _description_</span>
-<span class="sd">            video_path (_type_): _description_</span>
+<span class="sd">            timestamp (_type_): временная метка кадра</span>
+<span class="sd">            video_path (_type_): путь к видео</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            _type_: _description_</span>
+<span class="sd">            np.array: кадр со всеми метками использованных моделей</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">frame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">get_frame</span><span class="p">(</span><span class="n">timestamp</span><span class="p">,</span> <span class="n">video_path</span><span class="p">)</span>
         

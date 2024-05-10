@@ -2,19 +2,17 @@ import cv2
 
 
 class VideoRenderer():
-    """_summary_
-    """
+    """Класс, содержащий вспомогательные методы для работы с изоражениями и видео"""
     def __init__(self) -> None:
-        """_summary_
-        """
+        """Инициализация объекта класса"""
         self.config = None 
 
     @staticmethod
-    def plot_boxes(frame, data, type = 'detection'):  # plot detected class box
-        """_summary_
+    def plot_boxes(frame, data, type = 'detection'): 
+        """метод для отрисовки областей интереса, полученных с помощью детекции
 
         Returns:
-            _type_: _description_
+            nd.array: кадр с отрисованной областью
         """
         for obj in data:
             if type == 'detection':
@@ -35,12 +33,12 @@ class VideoRenderer():
 
     @staticmethod
     def save_handled_frame(frame_id, saved_video_path, img_save_path):
-        """_summary_
+        """метод для сохранения кадра из видео
 
         Args:
-            frame_id (_type_): _description_
-            saved_video_path (_type_): _description_
-            img_save_path (_type_): _description_
+            frame_id (_type_): id кадра 
+            saved_video_path (_type_): пусть к видео
+            img_save_path (_type_): путь сохранения кадра 
         """
         cap = cv2.VideoCapture(saved_video_path)
         count = 1
@@ -55,14 +53,14 @@ class VideoRenderer():
 
     @staticmethod
     def get_frame(timestamp, saved_video_path):
-        """_summary_
+        """поиск кадра по временной метке
 
         Args:
-            timestamp (_type_): _description_
-            saved_video_path (_type_): _description_
+            timestamp (_type_): временная метка кадра
+            saved_video_path (_type_): путь к видео
 
         Returns:
-            _type_: _description_
+            np.array: искомый кадр
         """
         cap = cv2.VideoCapture(saved_video_path)
         _, frame = cap.read()

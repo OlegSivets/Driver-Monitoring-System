@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>dms.utils package &mdash; Driwer-Monitoring-System  documentation</title>
+  <title>dms.utils package &mdash; Driver Monitoring System  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
 
@@ -33,7 +33,7 @@
           
           
           <a href="index.html" class="icon icon-home">
-            Driwer-Monitoring-System
+            Driver Monitoring System
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -70,7 +70,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">Driwer-Monitoring-System</a>
+          <a href="index.html">Driver Monitoring System</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -101,16 +101,16 @@
 <dt class="sig sig-object py" id="dms.utils.video_renderer.VideoRenderer">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dms.utils.video_renderer.</span></span><span class="sig-name descname"><span class="pre">VideoRenderer</span></span><a class="reference internal" href="_modules/dms/utils/video_renderer.html#VideoRenderer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dms.utils.video_renderer.VideoRenderer" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>_summary_</p>
+<p>Класс, содержащий вспомогательные методы для работы с изоражениями и видео</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="dms.utils.video_renderer.VideoRenderer.get_frame">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_frame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestamp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saved_video_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dms/utils/video_renderer.html#VideoRenderer.get_frame"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dms.utils.video_renderer.VideoRenderer.get_frame" title="Permalink to this definition"></a></dt>
-<dd><p>_summary_</p>
+<dd><p>поиск кадра по временной метке</p>
 <dl class="simple">
-<dt>Args:</dt><dd><p>timestamp (_type_): _description_
-saved_video_path (_type_): _description_</p>
+<dt>Args:</dt><dd><p>timestamp (_type_): временная метка кадра
+saved_video_path (_type_): путь к видео</p>
 </dd>
-<dt>Returns:</dt><dd><p>_type_: _description_</p>
+<dt>Returns:</dt><dd><p>np.array: искомый кадр</p>
 </dd>
 </dl>
 </dd></dl>
@@ -118,9 +118,9 @@ saved_video_path (_type_): _description_</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="dms.utils.video_renderer.VideoRenderer.plot_boxes">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">plot_boxes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'detection'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dms/utils/video_renderer.html#VideoRenderer.plot_boxes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dms.utils.video_renderer.VideoRenderer.plot_boxes" title="Permalink to this definition"></a></dt>
-<dd><p>_summary_</p>
+<dd><p>метод для отрисовки областей интереса, полученных с помощью детекции</p>
 <dl class="simple">
-<dt>Returns:</dt><dd><p>_type_: _description_</p>
+<dt>Returns:</dt><dd><p>nd.array: кадр с отрисованной областью</p>
 </dd>
 </dl>
 </dd></dl>
@@ -128,11 +128,11 @@ saved_video_path (_type_): _description_</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="dms.utils.video_renderer.VideoRenderer.save_handled_frame">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">save_handled_frame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frame_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saved_video_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_save_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dms/utils/video_renderer.html#VideoRenderer.save_handled_frame"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dms.utils.video_renderer.VideoRenderer.save_handled_frame" title="Permalink to this definition"></a></dt>
-<dd><p>_summary_</p>
+<dd><p>метод для сохранения кадра из видео</p>
 <dl class="simple">
-<dt>Args:</dt><dd><p>frame_id (_type_): _description_
-saved_video_path (_type_): _description_
-img_save_path (_type_): _description_</p>
+<dt>Args:</dt><dd><p>frame_id (_type_): id кадра 
+saved_video_path (_type_): пусть к видео
+img_save_path (_type_): путь сохранения кадра</p>
 </dd>
 </dl>
 </dd></dl>

@@ -1,9 +1,9 @@
-.. Driwer-Monitoring-System documentation master file, created by
-   sphinx-quickstart on Thu May  9 21:28:36 2024.
+.. Driver Monitoring System documentation master file, created by
+   sphinx-quickstart on Fri May 10 15:01:58 2024.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Driwer-Monitoring-System's documentation!
+Welcome to Driver Monitoring System's documentation!
 ====================================================
 
 .. toctree::

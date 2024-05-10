@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>dms.handler package &mdash; Driwer-Monitoring-System  documentation</title>
+  <title>dms.handler package &mdash; Driver Monitoring System  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
 
@@ -34,7 +34,7 @@
           
           
           <a href="index.html" class="icon icon-home">
-            Driwer-Monitoring-System
+            Driver Monitoring System
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -71,7 +71,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">Driwer-Monitoring-System</a>
+          <a href="index.html">Driver Monitoring System</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -107,16 +107,16 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="dms.handler.handler.VideoHandler.clear_data">
 <span class="sig-name descname"><span class="pre">clear_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dms/handler/handler.html#VideoHandler.clear_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dms.handler.handler.VideoHandler.clear_data" title="Permalink to this definition"></a></dt>
-<dd><p>_summary_</p>
+<dd><p>удаление информации об обработанных кадрах</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dms.handler.handler.VideoHandler.get_frame_data">
 <span class="sig-name descname"><span class="pre">get_frame_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestamp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dms/handler/handler.html#VideoHandler.get_frame_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dms.handler.handler.VideoHandler.get_frame_data" title="Permalink to this definition"></a></dt>
-<dd><p>_summary_</p>
+<dd><p>метд для полученния информации по обработанному кадру</p>
 <dl class="simple">
-<dt>Args:</dt><dd><p>timestamp (_type_): _description_
-task (_type_): _description_</p>
+<dt>Args:</dt><dd><p>timestamp (float): временная метка кадра
+task (str): тип обработки</p>
 </dd>
 <dt>Returns:</dt><dd><p>_type_: _description_</p>
 </dd>
@@ -126,13 +126,13 @@ task (_type_): _description_</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="dms.handler.handler.VideoHandler.handle_yolo_detection">
 <span class="sig-name descname"><span class="pre">handle_yolo_detection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frames</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dms/handler/handler.html#VideoHandler.handle_yolo_detection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dms.handler.handler.VideoHandler.handle_yolo_detection" title="Permalink to this definition"></a></dt>
-<dd><p>_summary_</p>
+<dd><p>метод для обработки результата модели детекции формата YOLO</p>
 <dl class="simple">
-<dt>Args:</dt><dd><p>model (_type_): _description_
-frames (_type_): _description_
-conf (_type_): _description_</p>
+<dt>Args:</dt><dd><p>model (_type_): модель детекции
+frames (np.array): кадры для обработки
+conf (float): параметр уверенности модели</p>
 </dd>
-<dt>Returns:</dt><dd><p>_type_: _description_</p>
+<dt>Returns:</dt><dd><p>list: результат обработки</p>
 </dd>
 </dl>
 </dd></dl>
@@ -140,13 +140,13 @@ conf (_type_): _description_</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="dms.handler.handler.VideoHandler.handle_yolo_pos_est">
 <span class="sig-name descname"><span class="pre">handle_yolo_pos_est</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frames</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dms/handler/handler.html#VideoHandler.handle_yolo_pos_est"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dms.handler.handler.VideoHandler.handle_yolo_pos_est" title="Permalink to this definition"></a></dt>
-<dd><p>_summary_</p>
+<dd><p>етод для обработки результата модели определения позы формата YOLO</p>
 <dl class="simple">
-<dt>Args:</dt><dd><p>model (_type_): _description_
-frames (_type_): _description_
-conf (_type_): _description_</p>
+<dt>Args:</dt><dd><p>model (_type_): модель определения позы
+frames (np.array): кадры для обработки 
+conf (float): параметр уверенности модели</p>
 </dd>
-<dt>Returns:</dt><dd><p>_type_: _description_</p>
+<dt>Returns:</dt><dd><p>list: результат обработки</p>
 </dd>
 </dl>
 </dd></dl>
@@ -154,17 +154,17 @@ conf (_type_): _description_</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="dms.handler.handler.VideoHandler.load_models">
 <span class="sig-name descname"><span class="pre">load_models</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dms/handler/handler.html#VideoHandler.load_models"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dms.handler.handler.VideoHandler.load_models" title="Permalink to this definition"></a></dt>
-<dd><p>_summary_</p>
+<dd><p>метод для инициализации моделей обработки</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dms.handler.handler.VideoHandler.process_batch">
 <span class="sig-name descname"><span class="pre">process_batch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frames</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestamps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame_ids</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dms/handler/handler.html#VideoHandler.process_batch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dms.handler.handler.VideoHandler.process_batch" title="Permalink to this definition"></a></dt>
-<dd><p>_summary_</p>
+<dd><p>метод для обработки набора кадров с помощью выбранных моделей и записи полученой информации</p>
 <dl class="simple">
-<dt>Args:</dt><dd><p>frames (_type_): _description_
-timestamps (_type_): _description_
-frame_ids (_type_): _description_</p>
+<dt>Args:</dt><dd><p>frames (mp.array): кадры для обработки 
+timestamps (list): список с временными метками кадров 
+frame_ids (list): список с id кадров</p>
 </dd>
 </dl>
 </dd></dl>
@@ -172,11 +172,11 @@ frame_ids (_type_): _description_</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="dms.handler.handler.VideoHandler.process_video">
 <span class="sig-name descname"><span class="pre">process_video</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">video_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dms/handler/handler.html#VideoHandler.process_video"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dms.handler.handler.VideoHandler.process_video" title="Permalink to this definition"></a></dt>
-<dd><p>_summary_</p>
+<dd><p>метод обработки видео</p>
 <dl class="simple">
-<dt>Args:</dt><dd><p>video_path (_type_): _description_</p>
+<dt>Args:</dt><dd><p>video_path (str): путьк видео</p>
 </dd>
-<dt>Returns:</dt><dd><p>_type_: _description_</p>
+<dt>Returns:</dt><dd><p>dict: результат обработки видео выбранными моделями</p>
 </dd>
 </dl>
 </dd></dl>

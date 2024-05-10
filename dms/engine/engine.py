@@ -5,17 +5,16 @@ from dms.settings import config
 
 class Engine:
     """
-    Класс Engine является связующим звеном между обработчиком, анализаторм и 
-    модулем для работы с базой данных.
+    Класс Engine является связующим звеном между обработчиком и анализаторм.
 
     """
-    def __init__(self, config = config):  # grayscale_adapted=False
+    def __init__(self, config = config): 
         """""
         Инициализация объекта класса
         Args:
             config (dict): конфигурация запуска системы содержит информацию
             о моделях, методах поиска нарушений и параметрах обработки видео.
-            Defaults to config['handlers'].
+            Defaults to config.
         """""
 
         self.config = config
@@ -24,14 +23,15 @@ class Engine:
         self.renderer = VideoRenderer()
 
     def violations_search(self, video_path, methods=None):
-        """_summary_
+        """метод для поиска нарушений на видео. 
 
         Args:
-            video_path (_type_): _description_
-            methods (_type_, optional): _description_. Defaults to None.
+            video_path (str): путь к видео
+            methods (list, optional): выбраные методы анализа видео, при отсутствии
+            параметра будут использованы все доступные методы
 
         Returns:
-            _type_: _description_
+            list: список нарушений
         """
         self.handler.clear_data()
         self.analizer.clear_data()
@@ -45,14 +45,14 @@ class Engine:
         return violations
     
     def show_violations(self, timestamp, video_path):
-        """_summary_
+        """метод для получения кадра со всеми метками использованных моделей обработки
 
         Args:
-            timestamp (_type_): _description_
-            video_path (_type_): _description_
+            timestamp (_type_): временная метка кадра
+            video_path (_type_): путь к видео
 
         Returns:
-            _type_: _description_
+            np.array: кадр со всеми метками использованных моделей
         """
         frame = self.renderer.get_frame(timestamp, video_path)
         
