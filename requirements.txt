@@ -1,7 +1,8 @@
-opencv-python==4.8.0.76
-numpy==1.25.2
-pandas==2.0.3
-tqdm==4.66.1
-ultralytics==8.0.184
-torch==2.0.1
-gradio==3.44.4
+opencv-python
+numpy
+pandas
+tqdm
+ultralytics
+gradio
+setuptools
+torchvision
