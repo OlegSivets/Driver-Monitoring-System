@@ -72,7 +72,7 @@ class Analyzer:
             list: список кадров на которых были зафиксированы нарушения
         """
         phone_usage_frames = []
-        max_wrist_dist = self.config['wrist_phone_usage']['max_wrist_dist']
+        max_wrist_dist = self.config['methods']['wrist_phone_usage']['max_wrist_dist']
 
         for frame_id, timestamp ,detections in det:
             for obj_name, bbox in detections:
@@ -95,9 +95,10 @@ class Analyzer:
             list: список нарушений
         """
         detection_data, pos_est_data = unprocessed_data
-        min_duratuin = self.config['wrist_phone_usage']['min_duration']
-        max_short_diff = self.config['wrist_phone_usage']['max_short_diff']
-        max_long_diff = self.config['wrist_phone_usage']['max_long_diff']
+        method_config = self.config['methods']['wrist_phone_usage']
+        min_duratuin = method_config['min_duration']
+        max_short_diff = method_config['max_short_diff']
+        max_long_diff = method_config['max_long_diff']
         violations = []
 
         phone_usage_frames = self._get_phone_usage_frames(detection_data, pos_est_data)
@@ -140,7 +141,7 @@ class Analyzer:
         for method in methods:
             func = getattr(self, method)
             unprocessed_data = []
-            for dtype in self.config[method]['required_data']:
+            for dtype in self.config['methods'][method]['required_data']:
                 unprocessed_data.append(data[dtype])
             self.violations.extend(func(unprocessed_data))
         return self.violations

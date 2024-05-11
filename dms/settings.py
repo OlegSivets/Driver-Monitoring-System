@@ -51,12 +51,14 @@ config = {
         ]
     },
     'analyser': {
-        'wrist_phone_usage': {
-            'required_data': ['detection', 'pos_est'],
-            'min_duration': 3000,
-            'max_wrist_dist': 200,
-            'max_short_diff': 3000,
-            'max_long_diff': 5000
+        'methods': {
+            'wrist_phone_usage': {
+                'required_data': ['detection', 'pos_est'],
+                'min_duration': 3000,
+                'max_wrist_dist': 200,
+                'max_short_diff': 3000,
+                'max_long_diff': 5000
+            }
         },
         'default_methods': [
             'wrist_phone_usage',
