@@ -10,9 +10,9 @@ config = {
                 'path': './trained_models/70_7_x_best.pt',
                 'format': 'YOLO',
                 'task': 'detection',
-                'classes' : None,
                 'specific_params': {
-                    'conf': 0.8
+                    'conf': 0.8,
+                    'classes' : [0]
                 }
             },
             'yolo_phone_detection_light': {
@@ -21,7 +21,8 @@ config = {
                 'task': 'detection',
                 'classes': ['67'],
                 'specific_params': {
-                    'conf': 0.7
+                    'conf': 0.7,
+                    'classes': [67]
                 }
             },
             'yolo_pose_detection_heavy': {

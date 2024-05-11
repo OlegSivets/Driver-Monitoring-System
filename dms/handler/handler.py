@@ -44,7 +44,7 @@ class VideoHandler():
                     model.to('cuda')
                 self.models[model_conf['task']][model_name] = model
 
-    def handle_yolo_detection(self, model, frames, conf):
+    def handle_yolo_detection(self, model, frames, conf, classes):
         """метод для обработки результата модели детекции формата YOLO
 
         Args:
@@ -55,7 +55,7 @@ class VideoHandler():
         Returns:
             list: результат обработки
         """
-        results = model(frames, verbose=False, conf=conf)  # TODO добавить conf в конфиг
+        results = model(frames, verbose=False, conf=conf, classes=classes)  # TODO добавить conf в конфиг
         names = model.names
         detection_data = []
 
@@ -135,8 +135,8 @@ class VideoHandler():
                 # Обработка моделей формата YOLO
                 if self.config['models'][model_name]['format'] == 'YOLO':
                     conf = self.config['models'][model_name]['specific_params']['conf']
-                    det_data = self.handle_yolo_detection(model, frames, conf)
-
+                    det_classes = self.config['models'][model_name]['specific_params']['classes']
+                    det_data = self.handle_yolo_detection(model, frames, conf, det_classes)
                 if det_data:
                     for i, _ in enumerate(frames):
                         batch_det_data[i][2].extend(det_data[i])
