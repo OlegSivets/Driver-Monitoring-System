@@ -76,7 +76,7 @@ class Analyzer:
 
         for frame_id, timestamp ,detections in det:
             for obj_name, bbox in detections:
-                if obj_name == 'cell phones':
+                if obj_name == 'cell phone' or obj_name == 'cell phones':  #TODO set keys
                     for person, keys, _ in pos[frame_id-1][2]:
                         for wrist in keys[9:11]:
                             if np.linalg.norm(self._get_center(bbox) - wrist) < max_wrist_dist:

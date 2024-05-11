@@ -22,7 +22,7 @@ class Engine:
         self.analizer = Analyzer(self.config['analyser'])
         self.renderer = VideoRenderer()
 
-    def violations_search(self, video_path, methods=None):
+    def violations_search(self, video_path, models=None, methods=None):
         """метод для поиска нарушений на видео. 
 
         Args:
@@ -36,10 +36,12 @@ class Engine:
         self.handler.clear_data()
         self.analizer.clear_data()
 
+        if not models:
+            models = self.config['handler']['default_models']
         if not methods:
             methods = list(self.config['analyser'].keys())
 
-        model_process_res = self.handler.process_video(video_path)
+        model_process_res = self.handler.process_video(video_path, models)
         violations = self.analizer.violation_analysis(model_process_res, methods)
         print(f'Найденные нарушения: {violations}')
         return violations

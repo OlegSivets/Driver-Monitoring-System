@@ -13,12 +13,12 @@ class Interface():
         self.engine = Engine()
 
         self.inputs  = [
-            gr.Video(label='Input Video'),
+            gr.Video(label='Input Video', height=400),
             gr.Textbox(lines=1, placeholder="0:00", label='Введите время нарушения')
         ]
 
         self.outputs = [
-            gr.Image(type='numpy'),
+            gr.Image(type='numpy', height=400),
             gr.Dataframe(
                 label="Результат обработки видео",
                 row_count=3,

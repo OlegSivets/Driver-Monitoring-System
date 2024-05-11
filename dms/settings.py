@@ -6,16 +6,34 @@
 config = {
     'handler':{
         'models': {
-            'yolo_phone_detection': {
+            'yolo_phone_detection_heavy': {
                 'path': './trained_models/70_7_x_best.pt',
                 'format': 'YOLO',
                 'task': 'detection',
+                'classes' : None,
                 'specific_params': {
                     'conf': 0.8
                 }
             },
-            'yolo_pose_detection': {
+            'yolo_phone_detection_light': {
+                'path': './trained_models/yolov8m.pt', 
+                'format': 'YOLO',
+                'task': 'detection',
+                'classes': ['67'],
+                'specific_params': {
+                    'conf': 0.7
+                }
+            },
+            'yolo_pose_detection_heavy': {
                 'path': './trained_models/yolov8x-pose.pt',
+                'format': 'YOLO',
+                'task': 'pos_est',
+                'specific_params': {
+                    'conf': 0.8
+                }
+            },
+            'yolo_pose_detection_light': {
+                'path': './trained_models/yolov8m-pose.pt',
                 'format': 'YOLO',
                 'task': 'pos_est',
                 'specific_params': {
@@ -26,14 +44,18 @@ config = {
         'processing': {
             'BATCH_SIZE': 4,
             'save_path': None
-        }
+        },
+        'default_models': [
+            'yolo_phone_detection_heavy',
+            'yolo_pose_detection_light'
+        ]
     },
     'analyser': {
         'wrist_phone_usage': {
             'required_data': ['detection', 'pos_est'],
             'min_duration': 3000,
             'max_wrist_dist': 200,
-            'max_short_diff': 2000,
+            'max_short_diff': 3000,
             'max_long_diff': 5000
         }
     }

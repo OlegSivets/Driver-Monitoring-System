@@ -19,18 +19,17 @@ class VideoHandler():
         """
 
         self.config = config
-
         self.models = {
-            'detection': [],
-            'pos_est': []
+            'detection': {},
+            'pos_est': {}
         }
-
         self.data = {
             'detection': [],
             'pos_est': []
         }
 
         self.cuda_status = torch.cuda.is_available()
+        self.active_models = []
         self.load_models()
 
     def load_models(self):
@@ -43,7 +42,7 @@ class VideoHandler():
             for model in init_models:
                 if self.cuda_status:
                     model.to('cuda')
-                self.models[model_conf['task']].append((model_name, model))
+                self.models[model_conf['task']][model_name] = model
 
     def handle_yolo_detection(self, model, frames, conf):
         """метод для обработки результата модели детекции формата YOLO
@@ -113,8 +112,18 @@ class VideoHandler():
             timestamps (list): список с временными метками кадров 
             frame_ids (list): список с id кадров 
         """
-        detection_models = self.models['detection']
-        pos_est_models = self.models['pos_est']
+
+        detection_models = []
+        pos_est_models = []
+        for model_name in self.active_models:
+            model_config = self.config['models'][model_name]
+            if model_config['task'] == 'detection':
+                model = self.models['detection'][model_name]
+                detection_models.append((model_name, model))
+            elif model_config['task'] == 'pos_est':
+                model = self.models['pos_est'][model_name]
+                pos_est_models.append((model_name, model))
+
         batch_det_data = []
         batch_pos_data = []
 
@@ -150,7 +159,7 @@ class VideoHandler():
         self.data['pos_est'].extend(batch_pos_data)
 
 
-    def process_video(self, video_path):
+    def process_video(self, video_path, active_models):
         """метод обработки видео
 
         Args:
@@ -160,6 +169,7 @@ class VideoHandler():
             dict: результат обработки видео выбранными моделями
         """
         batch_size = self.config['processing']['BATCH_SIZE']
+        self.active_models = active_models
         
         # Информация о видео
         cap = cv2.VideoCapture(video_path)
