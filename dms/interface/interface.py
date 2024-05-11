@@ -22,7 +22,7 @@ class Interface():
                 multiselect=True, label="Методы обработки видео", info="Доступные модели обработки видео"
             ),
             gr.Dropdown(
-                choices= list(config['analyser'].keys()), 
+                choices= list(config['analyser']['methods'].keys()), 
                 value=config['analyser']['default_methods'],
                 multiselect=True, label="Методы анализа", info="Доступные методы анализа нарушений"
             ),
