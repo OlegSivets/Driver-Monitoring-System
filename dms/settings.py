@@ -46,7 +46,7 @@ config = {
             'save_path': None
         },
         'default_models': [
-            'yolo_phone_detection_heavy',
+            'yolo_phone_detection_light',
             'yolo_pose_detection_light'
         ]
     },
@@ -57,6 +57,9 @@ config = {
             'max_wrist_dist': 200,
             'max_short_diff': 3000,
             'max_long_diff': 5000
-        }
+        },
+        'default_methods': [
+            'wrist_phone_usage',
+        ]
     }
 }

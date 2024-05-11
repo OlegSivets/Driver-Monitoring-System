@@ -3,6 +3,7 @@ import pandas as pd
 import cv2
 
 from dms.engine import Engine
+from dms.settings import config
 
 
 class Interface():
@@ -14,7 +15,17 @@ class Interface():
 
         self.inputs  = [
             gr.Video(label='Input Video', height=400),
-            gr.Textbox(lines=1, placeholder="0:00", label='Введите время нарушения')
+            gr.Textbox(lines=1, placeholder="0:00", label='Введите время нарушения'),
+            gr.Dropdown(
+                choices= list(config['handler']['models'].keys()), 
+                value=config['handler']['default_models'],
+                multiselect=True, label="Методы обработки видео", info="Доступные модели обработки видео"
+            ),
+            gr.Dropdown(
+                choices= list(config['analyser'].keys()), 
+                value=config['analyser']['default_methods'],
+                multiselect=True, label="Методы анализа", info="Доступные методы анализа нарушений"
+            ),
         ]
 
         self.outputs = [
@@ -36,7 +47,7 @@ class Interface():
         self.last_video = None
         self.pd_data = None
 
-    def logic(self, video_path, image_time):
+    def logic(self, video_path, image_time, models, methods):
         """метод, отвечающий за функционал всех компонентов интерфейса
 
         Args:
@@ -49,7 +60,7 @@ class Interface():
         image = None
 
         if video_path and self.last_video != video_path:
-            violations = self.engine.violations_search(video_path)
+            violations = self.engine.violations_search(video_path, models, methods)
             self.pd_ans = pd.DataFrame(violations, columns=['Начало', 'Конец', 'Человек', 'Нарушение'])
             self.last_video = video_path
 

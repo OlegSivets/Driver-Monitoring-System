@@ -39,7 +39,7 @@ class Engine:
         if not models:
             models = self.config['handler']['default_models']
         if not methods:
-            methods = list(self.config['analyser'].keys())
+            methods = self.config['analyser']['default_methods']
 
         model_process_res = self.handler.process_video(video_path, models)
         violations = self.analizer.violation_analysis(model_process_res, methods)
