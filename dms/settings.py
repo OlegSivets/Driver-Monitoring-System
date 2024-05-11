@@ -19,7 +19,6 @@ config = {
                 'path': './trained_models/yolov8m.pt', 
                 'format': 'YOLO',
                 'task': 'detection',
-                'classes': ['67'],
                 'specific_params': {
                     'conf': 0.7,
                     'classes': [67]
