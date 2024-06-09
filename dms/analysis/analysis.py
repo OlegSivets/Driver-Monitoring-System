@@ -72,11 +72,11 @@ class Analyzer:
             list: список кадров на которых были зафиксированы нарушения
         """
         phone_usage_frames = []
-        max_wrist_dist = self.config['methods']['wrist_phone_usage']['max_wrist_dist']
+        max_wrist_dist = self.config['methods']['wrist_usage']['max_wrist_dist']
 
         for frame_id, timestamp ,detections in det:
             for obj_name, bbox in detections:
-                if obj_name == 'cell phone' or obj_name == 'cell phones':  #TODO set keys
+                if obj_name in self.config['methods']['wrist_usage']['detected_classes']:
                     for person, keys, _ in pos[frame_id-1][2]:
                         for wrist in keys[9:11]:
                             if np.linalg.norm(self._get_center(bbox) - wrist) < max_wrist_dist:
@@ -84,7 +84,7 @@ class Analyzer:
                                 break
         return phone_usage_frames
 
-    def wrist_phone_usage(self, unprocessed_data):
+    def wrist_usage(self, unprocessed_data):
         """С помощью данных, полученных из испольщуемых моделей обработки
            фиксирует временные промежутки, где использовался телефон. 
 
@@ -95,7 +95,7 @@ class Analyzer:
             list: список нарушений
         """
         detection_data, pos_est_data = unprocessed_data
-        method_config = self.config['methods']['wrist_phone_usage']
+        method_config = self.config['methods']['wrist_usage']
         min_duratuin = method_config['min_duration']
         max_short_diff = method_config['max_short_diff']
         max_long_diff = method_config['max_long_diff']

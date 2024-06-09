@@ -22,8 +22,8 @@ class Interface():
                 multiselect=True, label="Методы обработки видео", info="Доступные модели обработки видео"
             ),
             gr.Dropdown(
-                choices= list(config['analyser']['methods'].keys()), 
-                value=config['analyser']['default_methods'],
+                choices=list(config['analyser']['methods'].keys()),  # ["Использование телефона"]
+                value=['analyser']['default_methods'],  # ["Использование телефона"]
                 multiselect=True, label="Методы анализа", info="Доступные методы анализа нарушений"
             ),
         ]
@@ -32,7 +32,7 @@ class Interface():
             gr.Image(type='numpy', height=400),
             gr.Dataframe(
                 label="Результат обработки видео",
-                row_count=3,
+                row_count=7,
                 col_count=4,
                 headers=['Начало', 'Конец', 'Человек', 'Нарушение'],
             ),
@@ -58,7 +58,7 @@ class Interface():
             (nd.array, pd.Dataframe): обработанный кадр, информация о нарушениях
         """
         image = None
-
+        methods = ['wrist_usage']
         if video_path and self.last_video != video_path:
             violations = self.engine.violations_search(video_path, models, methods)
             self.pd_ans = pd.DataFrame(violations, columns=['Начало', 'Конец', 'Человек', 'Нарушение'])
