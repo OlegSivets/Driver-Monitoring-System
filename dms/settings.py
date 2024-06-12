@@ -55,7 +55,8 @@ config = {
             'wrist_usage': {
                 'required_data': ['detection', 'pos_est'],
                 'min_duration': 3000,
-                'max_wrist_dist': 200,
+                'max_wrist_dist': 'auto', # 200
+                'dist_scale': 1,
                 'max_short_diff': 3000,
                 'max_long_diff': 5000,
                 'detected_classes': ['cell phone', 'cell phones']

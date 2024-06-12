@@ -27,6 +27,17 @@ class Analyzer:
         return np.array([(bbox[0] + bbox[2]) / 2, (bbox[1] + bbox[3]) / 2])
     
     @staticmethod
+    def _get_diagonal(bbox):
+        """вспомогательный метод для получения длины диагонали найденной области.
+
+        Args:
+            bbox (np.array): область, полученная моделью детекции
+        Returns:
+            float: длина диагонали
+        """
+        return np.sqrt((bbox[2] - bbox[0])**2 + (bbox[3] - bbox[1])**2)
+    
+    @staticmethod
     def convert_time(millis):
         """метод для перевода временных меток к формату минуты:секунды
 
@@ -79,9 +90,15 @@ class Analyzer:
                 if obj_name in self.config['methods']['wrist_usage']['detected_classes']:
                     for person, keys, _ in pos[frame_id-1][2]:
                         for wrist in keys[9:11]:
-                            if np.linalg.norm(self._get_center(bbox) - wrist) < max_wrist_dist:
-                                phone_usage_frames.append((frame_id, timestamp, person)) # + person
-                                break
+                            if max_wrist_dist != 'auto':
+                                if np.linalg.norm(self._get_center(bbox) - wrist) < max_wrist_dist:
+                                    phone_usage_frames.append((frame_id, timestamp, person))
+                                    break
+                            else:
+                                scale = self.config['methods']['wrist_usage']['dist_scale']
+                                if np.linalg.norm(self._get_center(bbox) - wrist) <  scale * self._get_diagonal(bbox):
+                                    phone_usage_frames.append((frame_id, timestamp, person)) 
+                                    break
         return phone_usage_frames
 
     def wrist_usage(self, unprocessed_data):

@@ -23,7 +23,7 @@ class Interface():
             ),
             gr.Dropdown(
                 choices=list(config['analyser']['methods'].keys()),  # ["Использование телефона"]
-                value=['analyser']['default_methods'],  # ["Использование телефона"]
+                value=config['analyser']['default_methods'],  # ["Использование телефона"]
                 multiselect=True, label="Методы анализа", info="Доступные методы анализа нарушений"
             ),
         ]
